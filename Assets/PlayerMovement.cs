@@ -44,7 +44,7 @@ public class PlayerMovement : MonoBehaviour
     bool isDashing;
     bool canDash = true; 
     TrailRenderer trailRenderer;    
-
+    //Ichanged something oooohhh
    // yayayayyayayayaya
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
