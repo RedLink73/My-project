@@ -43,13 +43,16 @@ public class PlayerMovement : MonoBehaviour
     public float dashCooldown =0.1f;
     bool isDashing;
     bool canDash = true; 
-    TrailRenderer trailRenderer;    
+    TrailRenderer trailRenderer;
+
+    public PlayerStateManager playerStateManager;
 
    // yayayayyayayayaya
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        playerStateManager.
         trailRenderer = GetComponent<TrailRenderer>();
     }
 
