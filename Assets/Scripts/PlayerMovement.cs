@@ -74,6 +74,14 @@ public class PlayerMovement : MonoBehaviour
 
     #endregion
 
+    #region DEBUG
+    [TextArea]
+    public string DEBUG_STRING;
+    
+    
+
+    #endregion
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -84,15 +92,11 @@ public class PlayerMovement : MonoBehaviour
         stateMovement = new StateMovement(rb, GetDir, moveSpeed);
         stateJump = new StateJump(rb, jumpPower, GetDir, moveSpeed);
         stateWallJump = new StateWallJump(rb, GetDir, wallJumpPower);
-        stateDash = new StateDash(rb, GetDir, dashSpeed, trailRenderer, dashDuration);
+        stateDash = new StateDash(rb, GetDir, dashSpeed, trailRenderer, dashDuration, ExitIsDashing);
         ((StateDash)stateDash).A_DashEnded += HandleDuration;
     }
 
-    Vector2 GetDir()
-    {
-        return _dir;
-    }
-
+   
     // Update is called once per frame
     void Update()
     {
@@ -105,6 +109,19 @@ public class PlayerMovement : MonoBehaviour
         UpdateDash();
 
         statemachine.Update();
+        DEBUG_STRING = "Current State: " + statemachine._currentState + "\n" + this;
+        DEBUG_STRING = "Current State: " + statemachine._currentState.canTransition + "\n" + this;
+    }
+
+    
+    public void ExitIsDashing()
+    {
+        isDashing = false;
+    }
+    
+    Vector2 GetDir()
+    {
+        return _dir;
     }
 
 
@@ -149,37 +166,35 @@ public class PlayerMovement : MonoBehaviour
 
     public void UpdateDash()
     {
-        if (!abilities.Contains(AbilitieEnums.Dash))
+        // Always decrement cooldown if dash is not available
+        if (!canDash)
         {
-            return;
+            if (currentDashCooldown > 0f)
+            {
+                currentDashCooldown -= Time.deltaTime;
+            }
+            else
+            {
+                HandleCooldown();
+            }
         }
-
-        if (currentDashCooldown >= 0f)
-        {
-            currentDashCooldown -= Time.deltaTime;
-            return;
-        }
-
-        HandleCooldown();
     }
 
     public void HandleCooldown()
     {
-        if (currentDashCooldown >= 0f && !abilities.Contains(AbilitieEnums.Dash))
+        // Only reset dash when cooldown is over and dash ability is still present
+        if (currentDashCooldown <= 0f && abilities.Contains(AbilitieEnums.Dash))
         {
-            return;
+            canDash = true;
+            abilities.Remove(AbilitieEnums.Dash);
         }
-
-        canDash = true;
-        currentDashCooldown = dashCooldown;
-        abilities.Remove(AbilitieEnums.Dash);
     }
 
     public void HandleDuration()
     {
         Debug.Log("Duration Ended");
         isDashing = false;
-        statemachine.ChangeState(stateIdle);
+        ResolveLocomotionState();
     }
 
     public void Dash(InputAction.CallbackContext context)
@@ -190,11 +205,24 @@ public class PlayerMovement : MonoBehaviour
             isDashing = true;
             currentDashCooldown = dashCooldown;
             statemachine.ChangeState(stateDash);
-            
             if (!abilities.Contains(AbilitieEnums.Dash))
             {
                 abilities.Add(AbilitieEnums.Dash);
             }
+        }
+    }
+    
+    private void ResolveLocomotionState()
+    {
+        Vector2 moveInput = _dir;
+
+        if (moveInput.sqrMagnitude > 0.01f)
+        {
+            statemachine.ChangeState(stateMovement);
+        }
+        else
+        {
+            statemachine.ChangeState(stateIdle);
         }
     }
 

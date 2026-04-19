@@ -356,11 +356,12 @@ MonoBehaviour:
   wallJumpPower: {x: 5, y: 10}
   dashSpeed: 30
   dashDuration: 0.2
-  dashCooldown: 1.7
-  currentDashCooldown: 1.7
+  dashCooldown: 2
+  currentDashCooldown: 0
   isDashing: 0
   canDash: 1
   abilities: 
+  DEBUG_STRING: 
 --- !u!96 &864254447346384329
 TrailRenderer:
   serializedVersion: 4
