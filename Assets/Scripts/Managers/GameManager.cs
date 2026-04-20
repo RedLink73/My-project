@@ -65,7 +65,14 @@ public class GameManager : MonoBehaviour
         currentPlayer = Instantiate(playerToSpawn, SpawnPoint, Quaternion.identity);
         currentPlayer.GetComponentInChildren<CinemachineCamera>().Follow = currentPlayer.transform;
         currentPlayer.GetComponent<PlayerMovement>().restristedStates.Clear();
-        
+        if (!_nextLevel.canDoublejump)
+        {
+            currentPlayer.GetComponent<PlayerMovement>().maxJumps = 1;
+        }
+        else
+        {
+            currentPlayer.GetComponent<PlayerMovement>().maxJumps = 2;
+        }
         foreach (var state in _nextLevel.restrictedStates)
         {
             if (state.script != null)

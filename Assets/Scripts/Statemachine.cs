@@ -18,7 +18,6 @@ public class Statemachine
     public void Update()
     {
         currentState.Update();
-        Debug.Log(currentState.ToString());
     }
 
     public void ChangeState(State state)
