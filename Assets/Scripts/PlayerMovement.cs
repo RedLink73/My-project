@@ -18,10 +18,11 @@ public class PlayerMovement : MonoBehaviour
 
     public float jumpPower = 10f;
     public int maxJumps = 2;
-    int jumpsRemaining;
+    public int jumpsRemaining;
 
     private Vector2 _dir;
 
+    private bool wasGrounded;
     public Transform groundCheckPos;
     public Vector2 groundCheckSize = new Vector2(0.5f, 0.05f);
     public LayerMask groundLayer;
@@ -43,6 +44,7 @@ public class PlayerMovement : MonoBehaviour
     float wallJumpTime = 0.5f;
     public float wallJumpTimer = 0f;
     public Vector2 wallJumpPower = new Vector2(5f, 5f);
+    public float wallJumpDuration = 0.15f;
 
     public float dashSpeed = 4f;
     public float dashDuration = 0.5f;
@@ -89,7 +91,7 @@ public class PlayerMovement : MonoBehaviour
         stateIdle = new StateIdle();
         stateMovement = new StateMovement(rb, GetDir, moveSpeed);
         stateJump = new StateJump(rb, jumpPower, GetDir, moveSpeed);
-        stateWallJump = new StateWallJump(rb, GetWallJumpDir, wallJumpPower);
+        stateWallJump = new StateWallJump(rb, GetWallJumpDir, wallJumpDuration, wallJumpPower, ResolveLocomotionState);
         stateDash = new StateDash(rb, GetDir, dashSpeed, trailRenderer, dashDuration, ExitIsDashing);
         stateWallSlide = new StateWallSlide(this);
         ((StateDash)stateDash).A_DashEnded += HandleDuration;
@@ -109,8 +111,8 @@ public class PlayerMovement : MonoBehaviour
         UpdateDash();
 
         statemachine.Update();
-        DEBUG_STRING = "Current State: " + statemachine.currentState.ToString() + "\n";
-        //DEBUG_STRING = "Can S: " + statemachine.currentState.canTransition + "\n" + this;
+        DEBUG_STRING = "Current State: " + statemachine.currentState.ToString() + "\n" +
+                       "Can S: " + statemachine.currentState.canTransition + "\n";
         //DEBUG_STRING = "Y VEl: " + rb.linearVelocityY + "\n";
     }
 
@@ -235,15 +237,16 @@ public class PlayerMovement : MonoBehaviour
 
     private void GroundCheck()
     {
-        if (Physics2D.OverlapBox(groundCheckPos.position, groundCheckSize, 0, groundLayer))
+        bool groundedNow = Physics2D.OverlapBox(groundCheckPos.position, groundCheckSize, 0, groundLayer);
+        IsGrounded = groundedNow;
+        
+        // Reset only on landing edge
+        if (!wasGrounded && groundedNow && rb.linearVelocity.y <= 0f)
         {
             jumpsRemaining = maxJumps;
-            IsGrounded = true;
         }
-        else
-        {
-            IsGrounded = false;
-        }
+
+        wasGrounded = groundedNow;
     }
 
     public bool WallCheck()
@@ -283,7 +286,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void ProcessWallSlide()
     {
-        if (!IsGrounded & WallCheck() & rb.linearVelocityY != 0)
+        if (!IsGrounded && WallCheck() && rb.linearVelocityY != 0)
         {
             statemachine.ChangeState(stateWallSlide);
             return;
@@ -292,7 +295,7 @@ public class PlayerMovement : MonoBehaviour
         // Exit wall slide
         if (statemachine.currentState == stateWallSlide)
         {
-           ResolveLocomotionState();
+            ResolveLocomotionState();
         }
     }
 
@@ -301,26 +304,16 @@ public class PlayerMovement : MonoBehaviour
         if (IsWallSliding)
         {
             wallJumpDirection = -transform.localScale.x;
-            wallJumpTimer = wallJumpTime;
-        }
-        else if(wallJumpTimer >= 0f)
-        {
-            wallJumpTimer -= Time.deltaTime;
+            Debug.unityLogger.Log("Wall Jump Direction: " + -transform.localScale.x);
         }
 
-        
-        // if (IsWallSliding)
-        // {
-        //     isWallJumping = false;
-        //     wallJumpDirection = -transform.localScale.x;
-        //     wallJumpTimer = wallJumpTime;
-        //
-        //     CancelInvoke(nameof(CancelWallJump));
-        // }
-        // else if (wallJumpTimer > 0f)
-        // {
-        //     wallJumpTimer -= Time.deltaTime;
-        // }
+        if (WallCheck())
+        {
+            if (wallJumpTimer >= 0f)
+            {
+                wallJumpTimer -= Time.deltaTime;
+            }
+        }
     }
 
     private void CancelWallJump()

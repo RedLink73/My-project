@@ -7,7 +7,7 @@ public class NextLevel : MonoBehaviour
 {
     private Events _events;
     public List<ScriptReference> restrictedStates = new List<ScriptReference>();
-    
+    public bool canDoublejump = true;
     public static List<NextLevel> LevelCompletePoints = new List<NextLevel>();
     
     
