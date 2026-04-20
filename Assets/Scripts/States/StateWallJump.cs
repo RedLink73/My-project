@@ -6,22 +6,21 @@ public class StateWallJump : State
     private Rigidbody2D _rb;
     float _wallJumpDirection;
     Vector2 _wallJumpPower;
-    private readonly Func<Vector2> _getDir;
-    Vector2 _wallJumpDir;
 
-    public StateWallJump(Rigidbody2D rb, Func<Vector2> getDir, Vector2 wallJumpPower)
+    public StateWallJump(Rigidbody2D rb, Func<float> getWallJumpDir, Vector2 wallJumpPower)
     {
         _rb = rb;
-        _getDir = getDir;
+        _wallJumpDirection = getWallJumpDir();
         _wallJumpPower = wallJumpPower;
     }
 
 
     public override void Enter()
     {
-        _wallJumpDir = _getDir();
-        _rb.linearVelocity = new Vector2(_wallJumpDir.x * _wallJumpPower.x, _wallJumpPower.y);
-        
+        // _wallJumpDir = _getDir();
+        // _rb.linearVelocity = new Vector2(_wallJumpDir.x * _wallJumpPower.x, _wallJumpPower.y);
+        // Debug.unityLogger.Log("Entered StateWallJump");
+
         // if (transform.localScale.x != wallJumpDirection)
         // {
         //     isFacingRight = !isFacingRight;
@@ -29,6 +28,13 @@ public class StateWallJump : State
         //     ls.x *= -1f;
         //     transform.localScale = ls;
         // }
+
+        Debug.Log("Entering State");
+
+        _rb.linearVelocity = new Vector2(
+            _wallJumpDirection * _wallJumpPower.x,
+            _wallJumpPower.y
+        );
     }
 
     public override void Update()

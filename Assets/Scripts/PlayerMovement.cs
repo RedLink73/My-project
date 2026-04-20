@@ -20,13 +20,12 @@ public class PlayerMovement : MonoBehaviour
     public int maxJumps = 2;
     int jumpsRemaining;
 
-    float horizontalMovement;
     private Vector2 _dir;
 
     public Transform groundCheckPos;
     public Vector2 groundCheckSize = new Vector2(0.5f, 0.05f);
     public LayerMask groundLayer;
-    bool isGrounded;
+    public bool IsGrounded;
 
     public Transform wallCheckPos;
     public Vector2 wallCheckSize = new Vector2(0.5f, 0.05f);
@@ -36,13 +35,13 @@ public class PlayerMovement : MonoBehaviour
     public float maxFallSpeed = 18f;
     public float fallSpeedMultiplier = 2f;
 
-    public float wallSlideSpeed = 2;
-    bool isWallSliding;
+    public float wallSlideSpeed = 0.2f;
+    public bool IsWallSliding;
 
     bool isWallJumping;
-    float wallJumpDirection;
+    public float wallJumpDirection;
     float wallJumpTime = 0.5f;
-    float wallJumpTimer = 0f;
+    public float wallJumpTimer = 0f;
     public Vector2 wallJumpPower = new Vector2(5f, 5f);
 
     public float dashSpeed = 4f;
@@ -65,6 +64,7 @@ public class PlayerMovement : MonoBehaviour
     public State stateJump;
     public State stateWallJump;
     public State stateDash;
+    public State stateWallSlide;
 
     #endregion
 
@@ -75,10 +75,8 @@ public class PlayerMovement : MonoBehaviour
     #endregion
 
     #region DEBUG
-    [TextArea]
-    public string DEBUG_STRING;
-    
-    
+
+    [TextArea] public string DEBUG_STRING;
 
     #endregion
 
@@ -91,12 +89,13 @@ public class PlayerMovement : MonoBehaviour
         stateIdle = new StateIdle();
         stateMovement = new StateMovement(rb, GetDir, moveSpeed);
         stateJump = new StateJump(rb, jumpPower, GetDir, moveSpeed);
-        stateWallJump = new StateWallJump(rb, GetDir, wallJumpPower);
+        stateWallJump = new StateWallJump(rb, GetWallJumpDir, wallJumpPower);
         stateDash = new StateDash(rb, GetDir, dashSpeed, trailRenderer, dashDuration, ExitIsDashing);
+        stateWallSlide = new StateWallSlide(this);
         ((StateDash)stateDash).A_DashEnded += HandleDuration;
     }
 
-   
+
     // Update is called once per frame
     void Update()
     {
@@ -104,24 +103,31 @@ public class PlayerMovement : MonoBehaviour
 
         GroundCheck();
         ProcessGravity();
-        ProcessWallSlide();
-        ProcessWallJump();
+        //ProcessWallSlide();
+        HandleStateTransitionForConditionBasedStates();
+        //ProcessWallJump();
         UpdateDash();
 
         statemachine.Update();
-        DEBUG_STRING = "Current State: " + statemachine._currentState + "\n" + this;
-        DEBUG_STRING = "Current State: " + statemachine._currentState.canTransition + "\n" + this;
+        DEBUG_STRING = "Current State: " + statemachine.currentState.ToString() + "\n";
+        //DEBUG_STRING = "Can S: " + statemachine.currentState.canTransition + "\n" + this;
+        //DEBUG_STRING = "Y VEl: " + rb.linearVelocityY + "\n";
     }
 
-    
+
     public void ExitIsDashing()
     {
         isDashing = false;
     }
-    
+
     Vector2 GetDir()
     {
         return _dir;
+    }
+
+    float GetWallJumpDir()
+    {
+        return wallJumpDirection;
     }
 
 
@@ -148,8 +154,9 @@ public class PlayerMovement : MonoBehaviour
     public void Jump(InputAction.CallbackContext context)
     {
         //WallJump
-        if (WallCheck() && context.performed && wallJumpTimer <= 0f && !isGrounded)
+        if (WallCheck() && context.performed && wallJumpTimer <= 0f && !IsGrounded)
         {
+            wallJumpTimer = wallJumpTime;
             Debug.Log("We are On the wall");
             statemachine.ChangeState(stateWallJump);
             return;
@@ -211,7 +218,7 @@ public class PlayerMovement : MonoBehaviour
             }
         }
     }
-    
+
     private void ResolveLocomotionState()
     {
         Vector2 moveInput = _dir;
@@ -231,15 +238,15 @@ public class PlayerMovement : MonoBehaviour
         if (Physics2D.OverlapBox(groundCheckPos.position, groundCheckSize, 0, groundLayer))
         {
             jumpsRemaining = maxJumps;
-            isGrounded = true;
+            IsGrounded = true;
         }
         else
         {
-            isGrounded = false;
+            IsGrounded = false;
         }
     }
 
-    private bool WallCheck()
+    public bool WallCheck()
     {
         return Physics2D.OverlapBox(wallCheckPos.position, wallCheckSize, 0, wallLayer);
     }
@@ -268,33 +275,52 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
+    public void HandleStateTransitionForConditionBasedStates()
+    {
+        ProcessWallSlide();
+        ProcessWallJump();
+    }
+
     private void ProcessWallSlide()
     {
-        if (!isGrounded & WallCheck() & horizontalMovement != 0)
+        if (!IsGrounded & WallCheck() & rb.linearVelocityY != 0)
         {
-            isWallSliding = true;
-            rb.linearVelocity = new Vector2(rb.linearVelocity.x, Mathf.Max(rb.linearVelocity.y, -wallSlideSpeed));
+            statemachine.ChangeState(stateWallSlide);
+            return;
         }
-        else
+
+        // Exit wall slide
+        if (statemachine.currentState == stateWallSlide)
         {
-            isWallSliding = false;
+           ResolveLocomotionState();
         }
     }
 
     private void ProcessWallJump()
     {
-        if (isWallSliding)
+        if (IsWallSliding)
         {
-            isWallJumping = false;
             wallJumpDirection = -transform.localScale.x;
             wallJumpTimer = wallJumpTime;
-
-            CancelInvoke(nameof(CancelWallJump));
         }
-        else if (wallJumpTimer > 0f)
+        else if(wallJumpTimer >= 0f)
         {
             wallJumpTimer -= Time.deltaTime;
         }
+
+        
+        // if (IsWallSliding)
+        // {
+        //     isWallJumping = false;
+        //     wallJumpDirection = -transform.localScale.x;
+        //     wallJumpTimer = wallJumpTime;
+        //
+        //     CancelInvoke(nameof(CancelWallJump));
+        // }
+        // else if (wallJumpTimer > 0f)
+        // {
+        //     wallJumpTimer -= Time.deltaTime;
+        // }
     }
 
     private void CancelWallJump()

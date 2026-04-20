@@ -4,38 +4,38 @@ using UnityEngine;
 
 public class Statemachine
 {
-    public State _currentState;
+    public State currentState;
     public State _previousState;
     private PlayerMovement _playerMovement;
-    
+
 
     public Statemachine(PlayerMovement playerMovement)
     {
-        _currentState = new StateIdle();
+        currentState = new StateIdle();
         _playerMovement = playerMovement;
     }
 
     public void Update()
     {
-        _currentState.Update();
-        Debug.Log(_currentState.canTransition.ToString());
+        currentState.Update();
+        Debug.Log(currentState.ToString());
     }
 
     public void ChangeState(State state)
     {
-        if (_playerMovement.restristedStates.Contains(state.ToString()) || !_currentState.canTransition)
+        if (_playerMovement.restristedStates.Contains(state.ToString()) || !currentState.canTransition)
         {
             return;
         }
 
-        if (state == _currentState && !_currentState.canReEnter)
+        if (state == currentState && !currentState.canReEnter)
         {
             return;
         }
 
-        _previousState = _currentState;
-        _currentState.Exit();
-        _currentState = state;
-        _currentState.Enter();
+        _previousState = currentState;
+        currentState.Exit();
+        currentState = state;
+        currentState.Enter();
     }
 }
