@@ -2405,6 +2405,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 5994474579625848475, guid: be2a8c01db2db114399adba29bc0e9a4, type: 3}
+      propertyPath: canDoublejump
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5994474579625848475, guid: be2a8c01db2db114399adba29bc0e9a4, type: 3}
       propertyPath: restrictedStates.Array.size
       value: 0
       objectReference: {fileID: 0}
