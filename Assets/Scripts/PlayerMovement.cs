@@ -22,11 +22,11 @@ public class PlayerMovement : MonoBehaviour
 
     private Vector2 _dir;
 
-    private bool wasGrounded;
     public Transform groundCheckPos;
     public Vector2 groundCheckSize = new Vector2(0.5f, 0.05f);
     public LayerMask groundLayer;
     public bool IsGrounded;
+    public  bool wasGrounded;
 
     public Transform wallCheckPos;
     public Vector2 wallCheckSize = new Vector2(0.5f, 0.05f);
@@ -167,8 +167,12 @@ public class PlayerMovement : MonoBehaviour
         //Normal Jump
         if (jumpsRemaining > 0 && context.performed)
         {
-            statemachine.ChangeState(stateJump);
-            jumpsRemaining--;
+            if (statemachine.ChangeState(stateJump))
+            {
+                jumpsRemaining--;
+                IsGrounded = false;   // we just jumped
+                wasGrounded = false;  // prevent fake landing-edge 
+            };
         }
     }
 
@@ -241,7 +245,7 @@ public class PlayerMovement : MonoBehaviour
         IsGrounded = groundedNow;
         
         // Reset only on landing edge
-        if (!wasGrounded && groundedNow && rb.linearVelocity.y <= 0f)
+        if (!wasGrounded && groundedNow && rb.linearVelocity.y <= 0.1f)
         {
             jumpsRemaining = maxJumps;
         }

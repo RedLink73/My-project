@@ -20,21 +20,22 @@ public class Statemachine
         currentState.Update();
     }
 
-    public void ChangeState(State state)
+    public bool ChangeState(State state)
     {
         if (_playerMovement.restristedStates.Contains(state.ToString()) || !currentState.canTransition)
         {
-            return;
+            return false;
         }
 
         if (state == currentState && !currentState.canReEnter)
         {
-            return;
+            return false;
         }
 
         _previousState = currentState;
         currentState.Exit();
         currentState = state;
         currentState.Enter();
+        return true;
     }
 }
