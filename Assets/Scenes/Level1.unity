@@ -134,7 +134,7 @@ GameObject:
   - component: {fileID: 123534884}
   m_Layer: 0
   m_Name: Camera
-  m_TagString: Untagged
+  m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
@@ -264,7 +264,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 123534879}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 72ece51f2901e7445ab60da3685d6b5f, type: 3}
   m_Name: 
@@ -333,7 +333,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 889e8f18cb654bf1b95f217498cd0d59, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
-  playerToSpawn: {fileID: 1580420733222638649, guid: bd2c90a06c2432240b60fb8a63f2de1d, type: 3}
+  playerToSpawn: {fileID: 4767728903281947330, guid: d5bdc110107e084459a8cb5277a4f961, type: 3}
   cinemachineCamera: {fileID: 0}
   currentPlayer: {fileID: 0}
   scenes:

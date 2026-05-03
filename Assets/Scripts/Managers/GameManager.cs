@@ -11,14 +11,13 @@ public class GameManager : MonoBehaviour
     public static GameManager instance;
     
     [SerializeField] private GameObject playerToSpawn;
-    [SerializeField] private CinemachineCamera cinemachineCamera;
 
     public GameObject currentPlayer;
     private Events _events;
     private NextLevel _nextLevel;
     public List<SceneReference> scenes;
     int levelIndex = 1;
-    
+    private CameraHandler _cameraHandler;
     
     private void Awake()
     {
@@ -40,7 +39,7 @@ public class GameManager : MonoBehaviour
         _events.A_OnLevelComplete += OnLevelLoaded;
         _nextLevel = FindObjectOfType<NextLevel>();
         _nextLevel.Init(_events);
-        
+       
         if (SpawnPoint.SpawnPoints.Count != 0)
         {
             SpawnPlayer(SpawnPoint.SpawnPoints[0].transform.position);
@@ -63,8 +62,8 @@ public class GameManager : MonoBehaviour
     void SpawnPlayer(Vector3 SpawnPoint)
     {
         currentPlayer = Instantiate(playerToSpawn, SpawnPoint, Quaternion.identity);
-        currentPlayer.GetComponentInChildren<CinemachineCamera>().Follow = currentPlayer.transform;
         currentPlayer.GetComponent<PlayerMovement>().restristedStates.Clear();
+        
         if (!_nextLevel.canDoublejump)
         {
             currentPlayer.GetComponent<PlayerMovement>().maxJumps = 1;
@@ -80,6 +79,12 @@ public class GameManager : MonoBehaviour
                 currentPlayer.GetComponent<PlayerMovement>().restristedStates.Add(state.scriptName);
             }
         } 
+        _cameraHandler = new CameraHandler(currentPlayer);
+    }
+
+    public void Update()
+    {
+        _cameraHandler.Update();
     }
 
     void OnLevelLoaded()

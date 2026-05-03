@@ -16,7 +16,7 @@ public class PlayerMovement : MonoBehaviour
     public float moveSpeed = 5f;
     bool isFacingRight = true;
 
-    public float jumpPower = 10f;
+    public float jumpPower = 15f;
     public int maxJumps = 2;
     public int jumpsRemaining;
 
@@ -41,9 +41,9 @@ public class PlayerMovement : MonoBehaviour
 
     bool isWallJumping;
     public float wallJumpDirection;
-    float wallJumpTime = 0.5f;
+    public float wallJumpTime = 0.2f;
     public float wallJumpTimer = 0f;
-    public Vector2 wallJumpPower = new Vector2(5f, 5f);
+    public Vector2 wallJumpPower = new Vector2(5f, 7f);
     public float wallJumpDuration = 0.15f;
 
     public float dashSpeed = 4f;
@@ -159,7 +159,6 @@ public class PlayerMovement : MonoBehaviour
         if (WallCheck() && context.performed && wallJumpTimer <= 0f && !IsGrounded)
         {
             wallJumpTimer = wallJumpTime;
-            Debug.Log("We are On the wall");
             statemachine.ChangeState(stateWallJump);
             return;
         }
@@ -308,7 +307,6 @@ public class PlayerMovement : MonoBehaviour
         if (IsWallSliding)
         {
             wallJumpDirection = -transform.localScale.x;
-            Debug.unityLogger.Log("Wall Jump Direction: " + -transform.localScale.x);
         }
 
         if (WallCheck())

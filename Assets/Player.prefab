@@ -77,7 +77,6 @@ GameObject:
   - component: {fileID: 1485924363537668541}
   - component: {fileID: 6158129312605599786}
   - component: {fileID: 7077209037876854485}
-  - component: {fileID: 7694786020045749702}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -365,15 +364,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3368484becdf6844abf486672fb7e3db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
+  restristedStates: []
   rb: {fileID: 4957691423789574402}
   moveSpeed: 6.19
-  jumpPower: 7
+  jumpPower: 3
   maxJumps: 2
+  jumpsRemaining: 0
   groundCheckPos: {fileID: 1147981580914599644}
   groundCheckSize: {x: 1, y: 0.05}
   groundLayer:
     serializedVersion: 2
     m_Bits: 8
+  IsGrounded: 0
+  wasGrounded: 0
   wallCheckPos: {fileID: 337722468610883396}
   wallCheckSize: {x: 0.05, y: 0.8}
   wallLayer:
@@ -383,10 +386,20 @@ MonoBehaviour:
   maxFallSpeed: 20
   fallSpeedMultiplier: 1
   wallSlideSpeed: 2
-  wallJumpPower: {x: 5, y: 10}
+  IsWallSliding: 0
+  wallJumpDirection: 0
+  wallJumpTime: 0.1
+  wallJumpTimer: 0
+  wallJumpPower: {x: 5, y: 5}
+  wallJumpDuration: 0.15
   dashSpeed: 30
   dashDuration: 0.1
   dashCooldown: 0.3
+  currentDashCooldown: 0
+  isDashing: 0
+  canDash: 1
+  abilities: 
+  DEBUG_STRING: 
 --- !u!96 &7077209037876854485
 TrailRenderer:
   serializedVersion: 4
@@ -497,18 +510,6 @@ TrailRenderer:
   m_Autodestruct: 0
   m_Emitting: 0
   m_ApplyActiveColorSpace: 1
---- !u!114 &7694786020045749702
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4767728903281947330}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: accaa4275fb778e4f9f91e24c3d39983, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerStateManager
 --- !u!1 &5884722352476673041
 GameObject:
   m_ObjectHideFlags: 0
