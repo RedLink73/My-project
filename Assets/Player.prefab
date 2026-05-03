@@ -79,7 +79,7 @@ GameObject:
   - component: {fileID: 7077209037876854485}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -367,7 +367,7 @@ MonoBehaviour:
   restristedStates: []
   rb: {fileID: 4957691423789574402}
   moveSpeed: 6.19
-  jumpPower: 3
+  jumpPower: 7.5
   maxJumps: 2
   jumpsRemaining: 0
   groundCheckPos: {fileID: 1147981580914599644}
@@ -383,14 +383,14 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   baseGravity: 1
-  maxFallSpeed: 20
+  maxFallSpeed: 40
   fallSpeedMultiplier: 1
   wallSlideSpeed: 2
   IsWallSliding: 0
-  wallJumpDirection: 0
+  wallJumpDirection: 1
   wallJumpTime: 0.1
   wallJumpTimer: 0
-  wallJumpPower: {x: 5, y: 5}
+  wallJumpPower: {x: 9, y: 9}
   wallJumpDuration: 0.15
   dashSpeed: 30
   dashDuration: 0.1
