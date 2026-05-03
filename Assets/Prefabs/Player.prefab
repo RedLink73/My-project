@@ -339,11 +339,14 @@ MonoBehaviour:
   moveSpeed: 7.3
   jumpPower: 7
   maxJumps: 2
+  jumpsRemaining: 0
   groundCheckPos: {fileID: 1863270747076187032}
   groundCheckSize: {x: 1, y: 0.05}
   groundLayer:
     serializedVersion: 2
     m_Bits: 8
+  IsGrounded: 0
+  wasGrounded: 0
   wallCheckPos: {fileID: 5738751035181625174}
   wallCheckSize: {x: 0.05, y: 0.8}
   wallLayer:
@@ -353,7 +356,11 @@ MonoBehaviour:
   maxFallSpeed: 20
   fallSpeedMultiplier: 1
   wallSlideSpeed: 2
+  IsWallSliding: 0
+  wallJumpDirection: 0
+  wallJumpTimer: 0
   wallJumpPower: {x: 5, y: 10}
+  wallJumpDuration: 0.15
   dashSpeed: 30
   dashDuration: 0.2
   dashCooldown: 2
@@ -373,7 +380,7 @@ TrailRenderer:
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
+  m_DynamicOccludee: 0
   m_StaticShadowCaster: 0
   m_MotionVectors: 0
   m_LightProbeUsage: 0

@@ -2307,7 +2307,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 5994474579625848475, guid: be2a8c01db2db114399adba29bc0e9a4, type: 3}
       propertyPath: restrictedStates.Array.size
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5994474579625848475, guid: be2a8c01db2db114399adba29bc0e9a4, type: 3}
       propertyPath: restrictedStates.Array.data[0].script
