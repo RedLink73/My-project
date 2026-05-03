@@ -1,0 +1,61 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &7750636890761270176
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 954118042005486067}
+  - component: {fileID: 4775150928245093763}
+  m_Layer: 0
+  m_Name: Managers
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &954118042005486067
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7750636890761270176}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 5.40663, y: 12.91424, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4775150928245093763
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7750636890761270176}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 889e8f18cb654bf1b95f217498cd0d59, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameManager
+  playerToSpawn: {fileID: 4767728903281947330, guid: d5bdc110107e084459a8cb5277a4f961, type: 3}
+  currentPlayer: {fileID: 0}
+  scenes:
+  - sceneName: Level1
+    sceneAsset: {fileID: 102900000, guid: 8c9cfa26abfee488c85f1582747f6a02, type: 3}
+  - sceneName: Level2
+    sceneAsset: {fileID: 102900000, guid: f1714985c5c2b2b489d80dc0fc3b486e, type: 3}
+  - sceneName: Level3
+    sceneAsset: {fileID: 102900000, guid: e87cbb0d1cbbc2e4a8a87d20d435de92, type: 3}
+  - sceneName: Level4
+    sceneAsset: {fileID: 102900000, guid: bb6106626d0aa6849a27dcd0d084b1dd, type: 3}
+  - sceneName: Level5
+    sceneAsset: {fileID: 102900000, guid: c6ce9283bd94166479dc56ed5151d05c, type: 3}
+  - sceneName: Level6
+    sceneAsset: {fileID: 102900000, guid: de0ed0b71117a92448bb9161513f522d, type: 3}
