@@ -347,6 +347,10 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 535bffc6-1cae-4b62-a886-8af70c3b26ef
     m_ActionName: 'Player/Dash[/Keyboard/e,/XInputControllerWindows/rightTrigger,/Mouse/rightButton]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: e8c71dc6-50a6-4b29-8c95-ca893448adf8
+    m_ActionName: 'Player/Restart[/Keyboard/r]'
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
@@ -366,7 +370,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
   restristedStates: []
   rb: {fileID: 4957691423789574402}
-  moveSpeed: 6.19
+  moveSpeed: 7
   jumpPower: 7.5
   maxJumps: 2
   jumpsRemaining: 0
@@ -383,7 +387,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   baseGravity: 1
-  maxFallSpeed: 40
+  maxFallSpeed: 400
   fallSpeedMultiplier: 1
   wallSlideSpeed: 2
   IsWallSliding: 0
