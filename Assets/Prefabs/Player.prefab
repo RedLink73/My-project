@@ -173,10 +173,10 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 1
+  m_Mass: 100
   m_LinearDamping: 0
   m_AngularDamping: 0.05
-  m_GravityScale: 0.5
+  m_GravityScale: 2
   m_Material: {fileID: 6200000, guid: c71797ec6445abd4299fa652e9aab122, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
@@ -371,9 +371,11 @@ MonoBehaviour:
   restristedStates: []
   rb: {fileID: 4957691423789574402}
   moveSpeed: 7
-  jumpPower: 7.5
+  jumpPower: 20
   maxJumps: 2
   jumpsRemaining: 0
+  jumpTimeThreashold: 0.5
+  jumpHangGravityMulti: 0.2
   groundCheckPos: {fileID: 1147981580914599644}
   groundCheckSize: {x: 1, y: 0.05}
   groundLayer:
@@ -381,20 +383,23 @@ MonoBehaviour:
     m_Bits: 8
   IsGrounded: 0
   wasGrounded: 0
+  baseGravity: 2
+  currentGravity: 0
+  maxFallSpeed: 15
+  fallSpeedMultiplier: 1.8
+  fallGravityAcceleration: 6
+  gravityResetSpeed: 12
   wallCheckPos: {fileID: 337722468610883396}
   wallCheckSize: {x: 0.05, y: 0.8}
   wallLayer:
     serializedVersion: 2
     m_Bits: 64
-  baseGravity: 1
-  maxFallSpeed: 400
-  fallSpeedMultiplier: 1
   wallSlideSpeed: 2
   IsWallSliding: 0
   wallJumpDirection: 1
-  wallJumpTime: 0.1
+  wallJumpTime: 0.05
   wallJumpTimer: 0
-  wallJumpPower: {x: 9, y: 9}
+  wallJumpPower: {x: 700, y: 1050}
   wallJumpDuration: 0.15
   dashSpeed: 30
   dashDuration: 0.1

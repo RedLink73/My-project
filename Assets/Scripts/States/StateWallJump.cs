@@ -27,10 +27,33 @@ public class StateWallJump : State
         canTransition = false;
         transitionTimer = maxTransitionTimer;
 
-        _rb.linearVelocity = new Vector2(
-            _wallJumpDirection() * _wallJumpPower.x,
-            _wallJumpPower.y
-        );
+        // _rb.linearVelocity = new Vector2(
+        //     _wallJumpDirection() * _wallJumpPower.x,
+        //     _wallJumpPower.y
+        // );
+        //
+        Execute();
+    }
+
+    public void Execute()
+    {
+        Vector2 velocity = _rb.linearVelocity;
+        // Optional: kill upward momentum if you want consistency
+        velocity.y = Mathf.Min(velocity.y, 0f);
+
+        _rb.linearVelocity = velocity;
+
+        if (Mathf.Sign(_rb.linearVelocity.x) != Mathf.Sign(_wallJumpPower.x))
+            _wallJumpPower.x -= _rb.linearVelocity.x;
+
+        if (_rb.linearVelocity.y <
+            0) //checks whether player is falling, if so we subtract the velocity.y (counteracting force of gravity). This ensures the player always reaches our desired jump force or greater
+            _wallJumpPower.y -= _rb.linearVelocity.y;
+
+        //Unlike in the run we want to use the Impulse mode.
+        //The default mode will apply are force instantly ignoring mass
+        Vector2 JumpPower = new Vector2(_wallJumpDirection() * _wallJumpPower.x, _wallJumpPower.y);
+        _rb.AddForce(JumpPower, ForceMode2D.Impulse);
     }
 
     public override void Update()

@@ -19,6 +19,9 @@ public class PlayerMovement : MonoBehaviour
     public float jumpPower = 15f;
     public int maxJumps = 2;
     public int jumpsRemaining;
+    public float jumpTimeThreashold = 0.5f;
+    public float jumpHangGravityMulti = 0.2f;
+
 
     private Vector2 _dir;
 
@@ -26,24 +29,25 @@ public class PlayerMovement : MonoBehaviour
     public Vector2 groundCheckSize = new Vector2(0.5f, 0.05f);
     public LayerMask groundLayer;
     public bool IsGrounded;
-    public  bool wasGrounded;
+    public bool wasGrounded;
+
+    public float baseGravity = 3f;
+    public float currentGravity = 0;
+    public float maxFallSpeed = 18f;
+    public float fallSpeedMultiplier = 1.8f;
+    public float fallGravityAcceleration = 6.0f;
+    public float gravityResetSpeed = 12.0f;
 
     public Transform wallCheckPos;
     public Vector2 wallCheckSize = new Vector2(0.5f, 0.05f);
     public LayerMask wallLayer;
-
-    public float baseGravity = 2f;
-    public float maxFallSpeed = 18f;
-    public float fallSpeedMultiplier = 2f;
-
     public float wallSlideSpeed = 0.2f;
     public bool IsWallSliding;
-
     bool isWallJumping;
     public float wallJumpDirection;
     public float wallJumpTime = 0.2f;
     public float wallJumpTimer = 0f;
-    public Vector2 wallJumpPower = new Vector2(5f, 7f);
+    public Vector2 wallJumpPower = new Vector2(200f, 200f);
     public float wallJumpDuration = 0.15f;
 
     public float dashSpeed = 4f;
@@ -116,7 +120,6 @@ public class PlayerMovement : MonoBehaviour
         //DEBUG_STRING = "Y VEl: " + rb.linearVelocityY + "\n";
     }
 
-
     public void ExitIsDashing()
     {
         isDashing = false;
@@ -169,9 +172,17 @@ public class PlayerMovement : MonoBehaviour
             if (statemachine.ChangeState(stateJump))
             {
                 jumpsRemaining--;
-                IsGrounded = false;   // we just jumped
-                wasGrounded = false;  // prevent fake landing-edge 
-            };
+                IsGrounded = false; // we just jumped
+                wasGrounded = false; // prevent fake landing-edge 
+            }
+        }
+
+        if (context.performed && rb.linearVelocity.y > 0)
+        {
+            rb.linearVelocity = new Vector2(
+                rb.linearVelocity.x,
+                rb.linearVelocity.y * 0.5f
+            );
         }
     }
 
@@ -242,11 +253,12 @@ public class PlayerMovement : MonoBehaviour
     {
         bool groundedNow = Physics2D.OverlapBox(groundCheckPos.position, groundCheckSize, 0, groundLayer);
         IsGrounded = groundedNow;
-        
+
         // Reset only on landing edge
         if (!wasGrounded && groundedNow && rb.linearVelocity.y <= 0.1f)
         {
             jumpsRemaining = maxJumps;
+            rb.linearVelocity = Vector2.zero;
         }
 
         wasGrounded = groundedNow;
@@ -270,15 +282,68 @@ public class PlayerMovement : MonoBehaviour
 
     public void ProcessGravity()
     {
-        if (rb.linearVelocity.y < 0)
+        // if (statemachine.currentState == stateJump && Mathf.Abs(rb.linearVelocity.y) < jumpTimeThreashold)
+        // {
+        //     SetGravityScale(baseGravity * jumpHangGravityMulti);
+        // }
+        // currentGravity = baseGravity;
+        //
+        // if (rb.linearVelocity.y < -0.1f)
+        // {
+        //     float targetGravity = baseGravity * fallSpeedMultiplier;
+        //
+        //     currentGravity = Mathf.Lerp(
+        //         currentGravity,
+        //         targetGravity,
+        //         4f * Time.deltaTime
+        //     );
+        //
+        //     rb.gravityScale = currentGravity;
+        //
+        //     rb.linearVelocity = new Vector2(
+        //         rb.linearVelocity.x,
+        //         Mathf.Max(rb.linearVelocity.y, -maxFallSpeed)
+        //     );
+        // }
+        // else
+        // {
+        //     currentGravity = Mathf.Lerp(
+        //         currentGravity,
+        //         baseGravity,
+        //         10f * Time.deltaTime
+        //     );
+        //
+        //     rb.gravityScale = currentGravity;
+        // }
+
+        if (rb.linearVelocity.y < -0.1f)
         {
-            rb.gravityScale = baseGravity * fallSpeedMultiplier; //Fall increasingly faster
-            rb.linearVelocity = new Vector2(rb.linearVelocity.x, Mathf.Max(rb.linearVelocity.y, -maxFallSpeed));
+            // Increase gravity quickly once descending
+            float targetGravity = baseGravity * fallSpeedMultiplier;
+
+            currentGravity = Mathf.Lerp(
+                currentGravity,
+                targetGravity,
+                fallGravityAcceleration * Time.deltaTime
+            );
         }
         else
         {
-            rb.gravityScale = baseGravity;
+            // Keep jump apex light and floaty
+            currentGravity = Mathf.Lerp(
+                currentGravity,
+                baseGravity,
+                gravityResetSpeed * Time.deltaTime
+            );
         }
+
+        rb.gravityScale = currentGravity;
+
+        // Clamp terminal velocity
+        rb.linearVelocity = new Vector2(
+            rb.linearVelocity.x,
+            Mathf.Max(rb.linearVelocity.y, -maxFallSpeed)
+        );
     }
 
     public void HandleStateTransitionForConditionBasedStates()
