@@ -386,8 +386,8 @@ MonoBehaviour:
   baseGravity: 2
   currentGravity: 0
   maxFallSpeed: 15
-  fallSpeedMultiplier: 1.8
-  fallGravityAcceleration: 6
+  fallSpeedMultiplier: 1.1
+  fallGravityAcceleration: 2
   gravityResetSpeed: 12
   wallCheckPos: {fileID: 337722468610883396}
   wallCheckSize: {x: 0.05, y: 0.8}

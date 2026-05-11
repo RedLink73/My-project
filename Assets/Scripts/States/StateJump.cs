@@ -29,29 +29,29 @@ public class StateJump : State
     {
         Vector2 dir = _getDir();
         // Better jump feel
-
-        if (_rb.linearVelocity.y < -0.1f)
-        {
-            _rb.gravityScale = baseGravity * fallMultiplier;
-        }
-        else
-        {
-            _rb.gravityScale = baseGravity;
-        }
+        //
+        // if (_rb.linearVelocity.y < -0.1f)
+        // {
+        //     _rb.gravityScale = baseGravity * fallMultiplier;
+        // }
+        // else
+        // {
+        //     _rb.gravityScale = baseGravity;
+        // }
         // else
         // {
         //     _rb.gravityScale = 1.5f; // Floaty apex
         // }
         //
         
-        if (_rb.linearVelocity.y < -0.1f)
-        {
-            _rb.gravityScale = 4.5f;
-        }
-        else
-        {
-            _rb.gravityScale = 3f;
-        }
+        // if (_rb.linearVelocity.y < -0.1f)
+        // {
+        //     _rb.gravityScale = 4.5f;
+        // }
+        // else
+        // {
+        //     _rb.gravityScale = 3f;
+        // }
         
         // if (dir.y < 0)
         // {
